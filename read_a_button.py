@@ -16,7 +16,7 @@ ans = []
 def on_release(key):
     global ans
     if (type(key) != Key and key != Key.shift and key != Key.shift_r):
-        ans.append(print(str(key.vk) + ' ' + key.char))
+        ans.append(str(key.vk) + ' ' + key.char)
     else:
         ans.append(str(key._value_)[1:-1] + ' ' + key._name_)
     #print(type(key) == KeyCode)
