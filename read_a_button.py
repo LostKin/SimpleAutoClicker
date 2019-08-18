@@ -7,18 +7,26 @@ import time
 keyboard = pynput.keyboard.Controller()
 mouse = pynput.mouse.Controller()
 
+
 def on_press(key):
     return
 
+ans = []
+
 def on_release(key):
+    global ans
     if (type(key) != Key and key != Key.shift and key != Key.shift_r):
-        print(str(key.vk) + ' ' + key.char)
+        ans.append(print(str(key.vk) + ' ' + key.char))
     else:
-        print(str(key._value_)[1:-1] + ' ' + key._name_)
+        ans.append(str(key._value_)[1:-1] + ' ' + key._name_)
     #print(type(key) == KeyCode)
     keyboard_listener.stop()
     return
 
 keyboard_listener = pynput.keyboard.Listener(on_press=on_press, on_release=on_release)
-keyboard_listener.start()
-keyboard_listener.join()
+
+def main(res):
+    global ans
+    keyboard_listener.start()
+    keyboard_listener.join()
+    res.append(ans[0])

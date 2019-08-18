@@ -3,7 +3,7 @@ import pynput
 from pynput.keyboard import Key, KeyCode
 import os
 from tkinter import Button
-import subprocess
+#import subprocess
 import macrolib as ml
 import auto_clicker as ac
 import sqlite3
@@ -11,7 +11,7 @@ import multiprocessing as mp
     
 # взять текст tk.Label().cget("text")    
 
-db = sqlite3.connect("./config.db")
+db = sqlite3.connect(".\config.db")
 cursor = db.cursor()
 
 def edit(lbl:tk.Label, text:str):
@@ -87,6 +87,12 @@ def stop_m():
     #proc.communicate("")
 
 
+def exit():
+    global proc
+    if type(proc) != int:
+        stop_m()
+    master.destroy()
+
 if __name__ == "__main__":
     mp.freeze_support()
     master = tk.Tk(className=' SimpleAutoClicker')
@@ -108,7 +114,7 @@ if __name__ == "__main__":
     clicks.grid(row=1, column=0, ipadx=30, padx=10)
     #clicks.pack(fill=tk.X)
     
-    quit = tk.Button(frame, text=' ' * 8 + 'QUIT' + ' ' * 8, fg='red', command=quit, background='white')
+    quit = tk.Button(frame, text=' ' * 8 + 'QUIT' + ' ' * 8, fg='red', command=exit, background='white')
     quit.grid(row=5, column=0, ipadx=10)
     #quit.pack(padx=5, pady=20, side=tk.LEFT)
     
