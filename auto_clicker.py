@@ -91,10 +91,12 @@ def on_click(mouse_x, mouse_y, button, pressed):
 keyboard_listener = pynput.keyboard.Listener(on_press=on_press, on_release=on_release)
 mouse_listener = pynput.mouse.Listener(on_click=on_click)
 db = sqlite3.connect("./config.db") 
-
+master = 0
 
 def start():
-    #x = tkinter.Tk()
+    global master
+    #master = tkinter.Tk()
+    #is_on = tkinter.Label(text="MACROS PAUSED", fg='black')
     global s_key, delay, stop_key
     db = sqlite3.connect("./config.db") 
     cursor = db.cursor()
@@ -111,12 +113,14 @@ def start():
     keyboard_listener.start()
     mouse_listener.start()
     click()
+    master.mainloop()
     keyboard_listener.join()
     mouse_listener.join()
     
 def stop():
+    global master
     db.close()
     keyboard_listener.stop()
     mouse_listener.stop()
+    master.destroy()
 
-start()
