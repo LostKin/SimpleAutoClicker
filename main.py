@@ -112,7 +112,7 @@ def upd():
         #is_paused.config(text='MACROS PAUSED')
         #print("off")
     is_paused.update()
-    submaster.lift()
+    #sub_master.lift()
     master.after(1000, upd)
 
 if __name__ == "__main__":
@@ -161,6 +161,14 @@ if __name__ == "__main__":
     is_paused.pack()
     #stop = tk.Label(frame, text='MACROS STOP BUTTON : ')
     master.after(1000, upd)
+    #master.call('wm', 'attributes', '.', '-topmost', '1')
+    #x = list(master.wm_attributes())
+    #x[3] = 1
+    #print(master.__dict__)
+    #print(master)
+    #print(sub_master.wm_attributes())
+    sub_master.attributes('-topmost', True)
+    sub_master.update()
     master.mainloop()
     sub_master.mainloop()
     db.close()
