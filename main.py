@@ -112,6 +112,7 @@ def upd():
         #is_paused.config(text='MACROS PAUSED')
         #print("off")
     is_paused.update()
+    submaster.lift()
     master.after(1000, upd)
 
 if __name__ == "__main__":
