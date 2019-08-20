@@ -50,23 +50,26 @@ def on_release(key):
     t = 0
     #print(type(key))
     #print(key==Key.enter, Key.enter._value_ )
-    if (type(key) == Key):
-        t = int(str(key._value_)[1:-1])
-        #os.system("nemo")
-    else:
-        t = key.vk
-    if (t == s_key.vk):
-        """for i in range(10):
-            mouse.press(Button.left)
-            mouse.release(Button.left)
-            time.sleep(0.1)"""
-        
-        auto_mode = 1 - auto_mode
-        if (not(auto_mode)):
-            print("OFF")
-            bal = 0
+    try:
+        if (type(key) == Key):
+            t = int(str(key._value_)[1:-1])
+            #os.system("nemo")
         else:
-            print("ON")
+            t = key.vk
+        if (t == s_key.vk):
+            """for i in range(10):
+                mouse.press(Button.left)
+                mouse.release(Button.left)
+                time.sleep(0.1)"""
+            
+            auto_mode = 1 - auto_mode
+            if (not(auto_mode)):
+                print("OFF")
+                bal = 0
+            else:
+                print("ON")
+    except:
+        return
         #print("in_on = ", auto_mode, "  mouse_press_balance =",  bal)
     #if (key == Key.ctrl_l):
     #    bal -= 1
