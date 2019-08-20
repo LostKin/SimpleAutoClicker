@@ -11,8 +11,12 @@ import multiprocessing as mp
     
 # взять текст tk.Label().cget("text")    
 
-db = sqlite3.connect(".\config.db")
+db = sqlite3.connect("./config.db")
 cursor = db.cursor()
+man = mp.Manager()
+com = man.list()
+com.append(0)
+
 
 def edit(lbl:tk.Label, text:str):
     lbl.config(text=text)
@@ -69,12 +73,15 @@ def SetPauseButton():
 proc = 0;
 
 def start_m():
+    global com
+    com.pop()
+    com.append(0)
     global proc
     #print("KEK")
     start.config(text="STOP MACROS", command=stop_m)
     start.update()
     #print("LOL")
-    proc = mp.Process(target=ac.start)
+    proc = mp.Process(target=ac.start, args=(com,))
     proc.start()
     #proc.join()
     
@@ -93,9 +100,24 @@ def exit():
         stop_m()
     master.destroy()
 
+
+def upd():
+    global com
+    if com[0]:
+        #is_paused.config(text='MACROS UNPAUSED')
+        is_paused.config(background='green')
+        #print("on")
+    else:
+        is_paused.config(background='red')
+        #is_paused.config(text='MACROS PAUSED')
+        #print("off")
+    is_paused.update()
+    master.after(1000, upd)
+
 if __name__ == "__main__":
     mp.freeze_support()
     master = tk.Tk(className=' SimpleAutoClicker')
+    sub_master = tk.Toplevel(master)
     #canvas = tk.Canvas(master, width=800, height=600, background='white')
     #canvas.pack()
     
@@ -132,7 +154,12 @@ if __name__ == "__main__":
     spause = tk.Button(frame, text='MACROS PAUSE BUTTON : ' + c_pause, fg='black', background='white', command=SetPauseButton)
     spause.grid(row=0, column=1, ipadx=30, padx=10)
     
+    #is_paused = tk.Label(sub_master, text="MACROS PAUSED", fg='black', background='white')
+    #is_paused.grid(row=3, column=3)
+    is_paused = tk.Canvas(sub_master, background='red', height=40, width=40)
+    is_paused.pack()
     #stop = tk.Label(frame, text='MACROS STOP BUTTON : ')
-    
+    master.after(1000, upd)
     master.mainloop()
+    sub_master.mainloop()
     db.close()

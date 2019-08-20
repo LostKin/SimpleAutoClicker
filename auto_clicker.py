@@ -22,10 +22,10 @@ stop_key = KeyCode.from_vk(0)
 auto_mode = 0
 bal = 0
 
-def click():
+def click(com):
     global bal, auto_mode, delay, ignore
     while True:
-        print("bal=", bal, "auto_mode=", auto_mode)
+        #print("bal=", bal, "auto_mode=", auto_mode)
         sup = time.time()
         if (auto_mode and bal):
             #keyboard.press('a')
@@ -36,6 +36,7 @@ def click():
             #ignore = False
         diff = time.time() - sup
         time.sleep(max(0, delay - diff))
+        com[0] = auto_mode
         
         
 def on_press(key):
@@ -90,15 +91,17 @@ def on_click(mouse_x, mouse_y, button, pressed):
 
 keyboard_listener = pynput.keyboard.Listener(on_press=on_press, on_release=on_release)
 mouse_listener = pynput.mouse.Listener(on_click=on_click)
-db = sqlite3.connect(".\config.db") 
+db = sqlite3.connect("./config.db") 
 master = 0
 
-def start():
+def start(com):
+    global auto_mode
+    com[0] = auto_mode
     global master
     #master = tkinter.Tk()
     #is_on = tkinter.Label(text="MACROS PAUSED", fg='black')
     global s_key, delay, stop_key
-    db = sqlite3.connect(".\config.db") 
+    db = sqlite3.connect("./config.db") 
     cursor = db.cursor()
     cursor.execute('''SELECT id FROM conf WHERE name = ?''', ("pause",))
     x = cursor.fetchone()[0]
@@ -112,8 +115,8 @@ def start():
     #delay = delay / 1000
     keyboard_listener.start()
     mouse_listener.start()
-    click()
-    master.mainloop()
+    click(com)
+    #master.mainloop()
     keyboard_listener.join()
     mouse_listener.join()
     
