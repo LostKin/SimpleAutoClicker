@@ -11,11 +11,39 @@ import multiprocessing as mp
     
 # взять текст tk.Label().cget("text")    
 
+class FloatingWindow(tk.Toplevel):
+    def __init__(self, *args, **kwargs):
+        tk.Toplevel.__init__(self, *args, **kwargs)
+        self.overrideredirect(True)
+
+        #self.label = tk.Label(self, text="Click on the grip to move")
+        #self.grip = tk.Label(self, bitmap="gray25")
+        #self.grip.pack(side="left", fill="y")
+        #self.label.pack(side="right", fill="both", expand=True)
+
+        self.bind("<ButtonPress-1>", self.StartMove)
+        self.bind("<ButtonRelease-1>", self.StopMove)
+        self.bind("<B1-Motion>", self.OnMotion)
+
+    def StartMove(self, event):
+        self.x = event.x
+        self.y = event.y
+
+    def StopMove(self, event):
+        self.x = None
+        self.y = None
+
+    def OnMotion(self, event):
+        deltax = event.x - self.x
+        deltay = event.y - self.y
+        x = self.winfo_x() + deltax
+        y = self.winfo_y() + deltay
+        self.geometry("+%s+%s" % (x, y))
+
+
+
 db = sqlite3.connect("./config.db")
 cursor = db.cursor()
-man = mp.Manager()
-com = man.list()
-com.append(0)
 
 
 def edit(lbl:tk.Label, text:str):
@@ -117,8 +145,13 @@ def upd():
 
 if __name__ == "__main__":
     mp.freeze_support()
+    man = mp.Manager()
+    com = man.list()
+    com.append(0)    
     master = tk.Tk(className=' SimpleAutoClicker')
-    sub_master = tk.Toplevel(master)
+    sub_master = FloatingWindow(master)
+    #sub_master = tk.Toplevel(master)
+    #sub_master.geometry('100x100')
     #canvas = tk.Canvas(master, width=800, height=600, background='white')
     #canvas.pack()
     
@@ -168,6 +201,9 @@ if __name__ == "__main__":
     #print(master)
     #print(sub_master.wm_attributes())
     sub_master.attributes('-topmost', True)
+    #sub_master.attributes('-disabled', True)
+    #sub_master.overrideredirect(1)
+    #sub_master.configure(background="black")
     sub_master.update()
     master.mainloop()
     sub_master.mainloop()
