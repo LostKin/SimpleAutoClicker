@@ -19,6 +19,7 @@ class AutoClicker(QObject):
 
         self.cps = cps
         self.pause_key = pause_key
+        self.delay = 1 / self.cps
 
         self.ignore = False
 
@@ -29,6 +30,13 @@ class AutoClicker(QObject):
         self.mouse_listener = pynput.mouse.Listener(on_click=self.on_click)
         self.keyboard_listener.start()
         self.mouse_listener.start()
+
+    def set_cps(self, cps):
+        self.cps = cps
+        self.delay = 1 / self.cps
+
+    def set_pause_key(self, pause_key):
+        self.pause_key = pause_key
 
     def on_release(self, key):
         t = 0
@@ -107,7 +115,6 @@ class AutoClicker(QObject):
         SendInput(1, ctypes.pointer(inp), ctypes.sizeof(inp))
 
     def mainloop(self):
-        self.delay = 1 / self.cps
         print("mainloop started")
         while True:
             # print("bal=", bal, "auto_mode=", auto_mode)

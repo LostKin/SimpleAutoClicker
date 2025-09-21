@@ -109,7 +109,7 @@ class AutoClickerWindow(QWidget):
             cps = int(text)
             if cps > 0:
                 self.config.set("clicks_per_second", cps)
-                self.ac.cps = cps
+                self.ac.set_cps(cps)
                 self.read_config()
             else:
                 self.read_config()
@@ -133,7 +133,7 @@ class AutoClickerWindow(QWidget):
             self.pause_label.setText(f"{key_name}")
             self.listening = False
             self.config.set("pause_button", key_name)
-            self.ac.pause_key = key_name
+            self.ac.set_pause_key(key_name)
             if self.thread is not None and self.thread.is_alive():
                 indicator_window.is_active = True
 
