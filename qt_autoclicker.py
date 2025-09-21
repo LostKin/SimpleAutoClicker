@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from pynput.keyboard import Key
 from pynput.mouse import Button
 import time
-import mouse
+import ctypes
 
 class AutoClicker(QObject):
     update_state = pyqtSignal(bool)
@@ -74,6 +74,36 @@ class AutoClicker(QObject):
         self.keyboard_listener.stop()
         self.mouse_listener.stop()
 
+    def emulate_click(self):
+
+        PUL = ctypes.POINTER(ctypes.c_ulong)
+
+        class MouseInput(ctypes.Structure):
+            _fields_ = [("dx", ctypes.c_long),
+                        ("dy", ctypes.c_long),
+                        ("mouseData", ctypes.c_ulong),
+                        ("dwFlags", ctypes.c_ulong),
+                        ("time", ctypes.c_ulong),
+                        ("dwExtraInfo", PUL)]
+
+        class Input(ctypes.Structure):
+            _fields_ = [("type", ctypes.c_ulong),
+                        ("mi", MouseInput)]
+
+        SendInput = ctypes.windll.user32.SendInput
+        # Mouse down
+        mi = MouseInput(0, 0, 0, 0x0002, 0, None)
+        inp = Input(0, mi)
+        SendInput(1, ctypes.pointer(inp), ctypes.sizeof(inp))
+
+        #
+        time.sleep(0.02)
+
+        # Mouse up
+        mi = MouseInput(0, 0, 0, 0x0004, 0, None)
+        inp = Input(0, mi)
+        SendInput(1, ctypes.pointer(inp), ctypes.sizeof(inp))
+
     def mainloop(self):
         self.delay = 1 / self.cps
         print("mainloop started")
@@ -85,7 +115,8 @@ class AutoClicker(QObject):
             if self.is_active and self.balance:
                 #self.mouse.press(Button.left)
                 #self.mouse.release(Button.left)
-                mouse.click("left")
+                #mouse.click("left")
+                self.emulate_click()
             diff = time.time() - sup
             time.sleep(max(0, self.delay - diff))
         print("mainloop stopped")
