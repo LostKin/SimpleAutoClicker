@@ -8,7 +8,7 @@ import macrolib as ml
 import auto_clicker as ac
 import sqlite3
 import multiprocessing as mp
-    
+
 # взять текст tk.Label().cget("text")    
 
 class FloatingWindow(tk.Toplevel):
@@ -147,47 +147,47 @@ if __name__ == "__main__":
     mp.freeze_support()
     man = mp.Manager()
     com = man.list()
-    com.append(0)    
+    com.append(0)
     master = tk.Tk(className=' SimpleAutoClicker')
     sub_master = FloatingWindow(master)
     #sub_master = tk.Toplevel(master)
     #sub_master.geometry('100x100')
     #canvas = tk.Canvas(master, width=800, height=600, background='white')
     #canvas.pack()
-    
+
     frame = tk.Frame(master)
     frame.pack()
-    
+
     cursor.execute('''SELECT cur_name FROM conf WHERE name = ?''', ("pause",))
     c_pause = cursor.fetchone()[0]
-    pause = tk.Label(frame, background='white', fg='black', text='SET PAUSE BUTTON')
+    pause = tk.Button(frame, background='white', fg='black', text='SET PAUSE BUTTON')
     pause.grid(row=0, column=0, ipadx=30, padx=10)
     #pause.pack(fill=tk.X)
-    
+
     cursor.execute('''SELECT cnt FROM nums WHERE name = ?''', ("cps",))
     c_cps = cursor.fetchone()[0]
-    clicks = tk.Label(frame, background='white', fg='black', text='SET CLICKS PER SEC')
+    clicks = tk.Button(frame, background='white', fg='black', text='SET CLICKS PER SEC')
     clicks.grid(row=1, column=0, ipadx=30, padx=10)
     #clicks.pack(fill=tk.X)
-    
+
     quit = tk.Button(frame, text=' ' * 8 + 'QUIT' + ' ' * 8, fg='red', command=exit, background='white')
     quit.grid(row=5, column=0, ipadx=10)
     #quit.pack(padx=5, pady=20, side=tk.LEFT)
-    
+
     start = tk.Button(frame, text='START MACROS', fg='black', background='white', command=start_m)
     start.grid(row=5, column=1, ipadx=10)
     #start.pack(padx=5, pady=20, side=tk.LEFT)
-    
+
     #stop = tk.Button(frame, text='STOP MACROS', fg='black', background='white', command=stop)
     #stop.grid(row=5, column=2, ipadx=10, padx=10)
     #stop.pack(padx=5, pady=20, side=tk.LEFT)
-    
-    cps = tk.Button(frame, text='CLICKS PER SEC : ' + str(c_cps), fg='black', background='white', command=SetClicksPerSec)
+
+    cps = tk.Entry(frame, fg='black', background='white')
     cps.grid(row=1, column=1, ipadx=30, padx=10)
-    
+
     spause = tk.Button(frame, text='MACROS PAUSE BUTTON : ' + c_pause, fg='black', background='white', command=SetPauseButton)
     spause.grid(row=0, column=1, ipadx=30, padx=10)
-    
+
     #is_paused = tk.Label(sub_master, text="MACROS PAUSED", fg='black', background='white')
     #is_paused.grid(row=3, column=3)
     is_paused = tk.Canvas(sub_master, background='red', height=40, width=40)

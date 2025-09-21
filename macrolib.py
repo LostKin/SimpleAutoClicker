@@ -23,6 +23,7 @@ def read_button():
     proc = mp.Process(target=rb.main, args=(x,))
     proc.start()
     proc.join()
+    proc.terminate()
     #print("x=", x)
     lst = x[0].split()
     #print("after_split= ", lst)
