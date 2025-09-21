@@ -25,6 +25,7 @@ class IndicatorWindow(QWidget):
 
         # Set the window flag to keep it always on top
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.setWindowFlags(Qt.FramelessWindowHint)
 
     def paintEvent(self, event):
@@ -133,7 +134,7 @@ class AutoClickerWindow(QWidget):
             self.listening = False
             self.config.set("pause_button", key_name)
             self.ac.pause_key = key_name
-            if self.thread.is_alive():
+            if self.thread is not None and self.thread.is_alive():
                 indicator_window.is_active = True
 
 

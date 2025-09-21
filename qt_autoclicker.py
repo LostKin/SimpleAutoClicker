@@ -1,7 +1,7 @@
 import pynput
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from pynput.keyboard import Key
+from pynput.keyboard import Key, KeyCode
 from pynput.mouse import Button
 import time
 import ctypes
@@ -35,11 +35,13 @@ class AutoClicker(QObject):
         if self.stop:
             return
         try:
+            print(type(key))
+            t = None
             if type(key) == Key:
                 t = key.name
                 # os.system("nemo")
-            else:
-                t = key.vk
+            elif type(key) == KeyCode:
+                t = key.char
             if t == self.pause_key.lower() or t == self.pause_key.upper() or t == self.pause_key:
                 """for i in range(10):
                     mouse.press(Button.left)
