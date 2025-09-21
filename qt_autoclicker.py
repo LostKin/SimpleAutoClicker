@@ -13,7 +13,7 @@ class AutoClicker(QObject):
 
         super().__init__()
         self.delay = None
-        self.stop = False
+        self.stop = True
         self.keyboard = pynput.keyboard.Controller()
         self.mouse = pynput.mouse.Controller()
 
@@ -32,6 +32,8 @@ class AutoClicker(QObject):
 
     def on_release(self, key):
         t = 0
+        if self.stop:
+            return
         try:
             if type(key) == Key:
                 t = key.name

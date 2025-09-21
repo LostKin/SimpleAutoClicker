@@ -19,6 +19,7 @@ class IndicatorWindow(QWidget):
         self.setWindowTitle("AutoClickerPauseIndicator")
         self.resize(40, 40)
         self.move(0, 0)
+        self.is_active = False
 
         layout = QVBoxLayout(self)
 
@@ -34,8 +35,10 @@ class IndicatorWindow(QWidget):
         else:
             painter.fillRect(self.rect(), self.inactiveColor)
 
-    def changeActiveState(self):
-        self.activeState = not self.activeState
+    def changeActiveState(self, value):
+        if not self.is_active:
+            return
+        self.activeState = value
         self.repaint()
 
 
@@ -115,6 +118,9 @@ class AutoClickerWindow(QWidget):
     def start_listening(self):
         self.listening = True
         self.pause_label.setText("Press any key now...")
+        indicator_window.changeActiveState(False)
+        indicator_window.is_active = False
+
 
     def keyPressEvent(self, event):
         if self.listening:
@@ -127,6 +133,8 @@ class AutoClickerWindow(QWidget):
             self.listening = False
             self.config.set("pause_button", key_name)
             self.ac.pause_key = key_name
+            if self.thread.is_alive():
+                indicator_window.is_active = True
 
 
     def closeEvent(self, event):
@@ -142,6 +150,7 @@ class AutoClickerWindow(QWidget):
             print("Thread is already running")
             self.thread.join()
             return
+        indicator_window.is_active = True
         self.start_button.setText("Stop Macro")
         self.start_button.clicked.disconnect()
         self.start_button.clicked.connect(self.stop_macro)
@@ -151,6 +160,7 @@ class AutoClickerWindow(QWidget):
         self.thread.start()
 
     def stop_macro(self):
+        indicator_window.is_active = False
         self.start_button.setText("Start Macro")
         self.start_button.clicked.disconnect()
         self.start_button.clicked.connect(self.start_macro)
