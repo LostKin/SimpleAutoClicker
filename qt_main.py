@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QGridLayout, QPushButton, QLineEdit
-from PyQt5.QtGui import QPainter, QColor, QTextLayout, QKeySequence
+from PyQt5.QtGui import QPainter, QColor, QKeySequence
 from PyQt5.QtCore import Qt, pyqtSignal
 from json_config import JsonConfig
 

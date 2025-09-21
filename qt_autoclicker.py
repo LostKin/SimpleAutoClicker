@@ -1,9 +1,10 @@
 import pynput
 
 from PyQt5.QtCore import QObject, pyqtSignal
-from pynput.keyboard import Key, KeyCode
+from pynput.keyboard import Key
 from pynput.mouse import Button
 import time
+import mouse
 
 class AutoClicker(QObject):
     update_state = pyqtSignal(bool)
@@ -80,12 +81,9 @@ class AutoClicker(QObject):
                 break
             sup = time.time()
             if self.is_active and self.balance:
-                # keyboard.press('a')
-                # keyboard.release('a')
-                # ignore = True
-                self.mouse.press(Button.left)
-                self.mouse.release(Button.left)
-                # ignore = False
+                #self.mouse.press(Button.left)
+                #self.mouse.release(Button.left)
+                mouse.click("left")
             diff = time.time() - sup
             time.sleep(max(0, self.delay - diff))
         print("mainloop stopped")
